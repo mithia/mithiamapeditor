@@ -32,10 +32,6 @@ namespace Aesir5
         private Point copyStartTile = new Point(-1, -1);
         private Map activeMap;
         private string activeMapPath;
-        private int xMaxFill;
-        private int xMinFill;
-        private int yMaxFill;
-        private int yMinFill;
 
         private readonly LinkedList<IMapAction> mapUndoActions = new LinkedList<IMapAction>();
         private readonly LinkedList<IMapAction> mapRedoActions = new LinkedList<IMapAction>();
@@ -59,12 +55,12 @@ namespace Aesir5
         {
             InitializeComponent();
             MdiParent = mdiParent;
-            MinimapWindow = new FormMinimap{MdiParent = mdiParent};
+            MinimapWindow = new FormMinimap { MdiParent = mdiParent };
             MinimapWindow.Location = new Point(Parent.Width - 280, 20);
 
             menuStrip.Visible = false;
             //pnlImage.Paint += pnlImage_Paint;
-            
+
             showMinimapToolStripMenuItem.PerformClick();
             resizeWindowToDefaultToolStripMenuItem.PerformClick();
             showTilesToolStripMenuItem.Checked = true;
@@ -74,7 +70,7 @@ namespace Aesir5
 
             Reload(false);
             CreateNewMapCore(initialWidth, initialHeight);
-            
+
             MinimapWindow.FormClosing += MinimapWindow_FormClosing;
             MinimapWindow.SelectionChanged += MinimapWindow_SelectionChanged;
             this.LostFocus += new EventHandler(FormMap_LostFocus);
@@ -371,8 +367,20 @@ namespace Aesir5
 
             if (copyStartTile != new Point(-1, -1))
             {
-                CopySelection(copyStartTile, focusedTile, true, true);
+
                 toolStripStatusLabel.Text = string.Format("Upper Left: ({0}, {1}) Lower Right: ({2}, {3})", copyStartTile.X, copyStartTile.Y, focusedTile.X, focusedTile.Y);
+                if (ModifierKeys == Keys.Alt)
+                {
+                    CopySelection(copyStartTile, focusedTile, true, false);
+                }
+                else if (ModifierKeys == Keys.Control)
+                {
+                    CopySelection(copyStartTile, focusedTile, false, true);
+                }
+                else
+                {
+                    CopySelection(copyStartTile, focusedTile, true, true);
+                }
             }
             copyStartTile = new Point(-1, -1);
         }
@@ -599,7 +607,7 @@ namespace Aesir5
 
             DialogResult dialogResult = MessageBox.Show(
                 string.Format(@"Do you want to save changes to the current map ({0})?", activeMap.Name ?? string.Empty),
-                @"Save changes",MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3);
+                @"Save changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3);
 
             if (dialogResult == DialogResult.Yes) saveEncryptedToolStripMenuItem.PerformClick();
             return dialogResult;
@@ -666,7 +674,7 @@ namespace Aesir5
                 if ((float)imgWidth / imgHeight > 1.0f)
                 {
                     MinimapWindow.Width = 250;
-                    MinimapWindow.Height = (int)(250*((float) imgHeight/imgWidth)) + 20;
+                    MinimapWindow.Height = (int)(250 * ((float)imgHeight / imgWidth)) + 20;
                 }
                 else
                 {
@@ -717,7 +725,7 @@ namespace Aesir5
             }
 
             return dictionary;
-        } 
+        }
 
         private void Paste(int tileX, int tileY, TileManager.SelectionType selectionType)
         {
@@ -739,7 +747,7 @@ namespace Aesir5
                     // Go to next step of the loop if old value equals new value
                     int oldValue;
                     if (selectionType == TileManager.SelectionType.Object) oldValue = activeMap[mapTileX, mapTileY].ObjectNumber;
-                    else if (selectionType == TileManager.SelectionType.Pass) oldValue = activeMap[mapTileX, mapTileY].Passability ? 0: 1;
+                    else if (selectionType == TileManager.SelectionType.Pass) oldValue = activeMap[mapTileX, mapTileY].Passability ? 0 : 1;
                     else oldValue = activeMap[mapTileX, mapTileY].TileNumber;
 
                     if (oldValue == keyValuePair.Value) continue;
@@ -750,7 +758,7 @@ namespace Aesir5
 
                     if (selectionType == TileManager.SelectionType.Object)
                     {
-                        AddMapAction(new MapActionPasteObject(point, activeMap[mapTileX, mapTileY].ObjectNumber,keyValuePair.Value));
+                        AddMapAction(new MapActionPasteObject(point, activeMap[mapTileX, mapTileY].ObjectNumber, keyValuePair.Value));
                         activeMap[mapTileX, mapTileY].ObjectNumber = keyValuePair.Value;
                     }
 
@@ -804,17 +812,14 @@ namespace Aesir5
             if (activeMap[fillX, fillY].TileNumber != findTile) return;
 
             Paste(fillX, fillY, TileManager.SelectionType.Tile);
-            //activeMap[fillX, fillY] = activeMap[fillX, fillY] ?? Map.Tile.GetDefault();
-            //AddMapAction(new MapActionPasteTile(new Point(fillX, fillY), replaceTile, replaceTile));
-            //activeMap[fillX, fillY].TileNumber = replaceTile;
 
 
-            if (fillX + 1 < xMaxFill) { floodFill(fillX + 1, fillY, findTile, replaceTile); }
-            if (fillX - 1 >= xMinFill) { floodFill(fillX - 1, fillY, findTile, replaceTile); }
-            if (fillY + 1 < yMaxFill) { floodFill(fillX, fillY + 1, findTile, replaceTile); }
-            if (fillY - 1 >= yMinFill) { floodFill(fillX, fillY -1, findTile, replaceTile); }
+            if (fillX + 1 < activeMap.Size.Width) { floodFill(fillX + 1, fillY, findTile, replaceTile); }
+            if (fillX - 1 >= 0) { floodFill(fillX - 1, fillY, findTile, replaceTile); }
+            if (fillY + 1 < activeMap.Size.Height) { floodFill(fillX, fillY + 1, findTile, replaceTile); }
+            if (fillY - 1 >= 0) { floodFill(fillX, fillY - 1, findTile, replaceTile); }
             return;
-            
+
         }
 
         private void AddMapAction(IMapAction mapAction)
@@ -986,9 +991,9 @@ namespace Aesir5
         private Bitmap GetTileBitmap(int x, int y)
         {
             if (!showTiles) return null;
-            
+
             bitmap = new Bitmap(sizeModifier, sizeModifier);
-            
+
             Map.Tile mapTile = activeMap[x, y];
             if (mapTile == null || mapTile.TileNumber <= 0) return null;
             if (mapTile.TileNumber >= TileManager.Epf[0].max) return null;
