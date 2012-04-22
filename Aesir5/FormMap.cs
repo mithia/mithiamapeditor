@@ -311,7 +311,7 @@ namespace Aesir5
         {
             if (e.Button != MouseButtons.Left) return;
 
-            if (ModifierKeys == (Keys.Control | Keys.Alt | Keys.Shift))
+            if (ModifierKeys == Keys.Control || ModifierKeys == Keys.Alt || ModifierKeys == Keys.Shift)
             {
                 copyStartTile.X = e.X / sizeModifier;
                 copyStartTile.Y = e.Y / sizeModifier;
@@ -356,11 +356,11 @@ namespace Aesir5
             {
                 toolStripStatusLabel.Text = string.Format("Upper Left: ({0}, {1}) Lower Right: ({2}, {3})", copyStartTile.X, copyStartTile.Y, focusedTile.X, focusedTile.Y);
                 
-                if (ModifierKeys == Keys.Control)
+                if (ModifierKeys == Keys.Alt)
                 {
                     CopySelection(copyStartTile, focusedTile, true, false);
                 }
-                else if (ModifierKeys == Keys.Alt)
+                else if (ModifierKeys == Keys.Control)
                 {
                     CopySelection(copyStartTile, focusedTile, false, true);
                 }
