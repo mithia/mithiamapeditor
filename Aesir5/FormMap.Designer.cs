@@ -50,6 +50,7 @@
             this.resizeMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.copySectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,7 +197,8 @@
             this.editableToolStripMenuItem,
             this.resizeMapToolStripMenuItem,
             this.toolStripSeparator4,
-            this.copySectionToolStripMenuItem});
+            this.copySectionToolStripMenuItem,
+            this.autoSaveToolStripMenuItem});
             this.editToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
@@ -206,7 +208,7 @@
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -214,21 +216,21 @@
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(183, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(219, 6);
             // 
             // editableToolStripMenuItem
             // 
             this.editableToolStripMenuItem.CheckOnClick = true;
             this.editableToolStripMenuItem.Name = "editableToolStripMenuItem";
             this.editableToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.editableToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.editableToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.editableToolStripMenuItem.Text = "&Editable";
             this.editableToolStripMenuItem.Click += new System.EventHandler(this.editableToolStripMenuItem_Click);
             // 
@@ -236,14 +238,14 @@
             // 
             this.resizeMapToolStripMenuItem.Name = "resizeMapToolStripMenuItem";
             this.resizeMapToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.resizeMapToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.resizeMapToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.resizeMapToolStripMenuItem.Text = "&Resize Map...";
             this.resizeMapToolStripMenuItem.Click += new System.EventHandler(this.resizeMapToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(183, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(219, 6);
             // 
             // copySectionToolStripMenuItem
             // 
@@ -251,9 +253,19 @@
             this.copySectionToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copySectionToolStripMenuItem.Name = "copySectionToolStripMenuItem";
             this.copySectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copySectionToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.copySectionToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.copySectionToolStripMenuItem.Text = "&Copy Section";
             this.copySectionToolStripMenuItem.Click += new System.EventHandler(this.copySectionToolStripMenuItem_Click);
+            // 
+            // autoSaveToolStripMenuItem
+            // 
+            this.autoSaveToolStripMenuItem.CheckOnClick = true;
+            this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
+            this.autoSaveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.autoSaveToolStripMenuItem.Text = "Au&to Save";
             // 
             // viewToolStripMenuItem
             // 
@@ -379,7 +391,8 @@
             // 
             // tmrSave
             // 
-            this.tmrSave.Interval = 900000;
+            this.tmrSave.Interval = 60000;
+            this.tmrSave.Tick += new System.EventHandler(this.tmrSave_Tick);
             // 
             // FormMap
             // 
@@ -443,5 +456,6 @@
         internal System.Windows.Forms.PictureBox pnlImage;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.Timer tmrSave;
+        private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
     }
 }

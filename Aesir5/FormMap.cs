@@ -36,6 +36,7 @@ namespace Aesir5
         private int xMaxFill;
         private int yMinFill;
         private int yMaxFill;
+        private int saveCheck = 0;
 
         private readonly LinkedList<IMapAction> mapUndoActions = new LinkedList<IMapAction>();
         private readonly LinkedList<IMapAction> mapRedoActions = new LinkedList<IMapAction>();
@@ -422,6 +423,7 @@ namespace Aesir5
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveCheck = 0;
             if (string.IsNullOrEmpty(activeMapPath)) saveAsToolStripMenuItem.PerformClick();
             if (string.IsNullOrEmpty(activeMapPath)) return;
 
@@ -841,6 +843,19 @@ namespace Aesir5
             SetImage(null);
             resizeWindowToDefaultToolStripMenuItem.PerformClick();
             if (render) RenderMap();
+        }
+
+        private void tmrSave_Tick(object sender, EventArgs e)
+        {
+            if (autoSaveToolStripMenuItem.Checked) CheckSave();
+        }
+
+        private void CheckSave()
+        {
+            saveCheck++;
+
+            if (string.IsNullOrEmpty(activeMapPath) && saveCheck == 15) saveCheck = 0;
+            else if (saveCheck == 15) saveToolStripMenuItem.PerformClick();
         }
 
         #endregion
