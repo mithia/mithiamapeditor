@@ -727,6 +727,23 @@ namespace Aesir5
             return dictionary;
         }
 
+        private void replaceTile(Map.Tile oldTile, Map.Tile newTile)
+        {
+            TileManager.SelectionType pasteSelection = new TileManager.SelectionType();
+
+            for (int x = 0; x <= activeMap.Size.Width; x++)
+            {
+                for (int y = 0; y <= activeMap.Size.Width; y++)
+                {
+                    if ((activeMap[x, y] ?? Map.Tile.GetDefault()) == oldTile)
+                    {
+                        Paste(x, y, pasteSelection);
+                    }
+                }
+            }
+
+        }
+
         private void Paste(int tileX, int tileY, TileManager.SelectionType selectionType)
         {
             Dictionary<Point, int> selection;
