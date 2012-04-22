@@ -42,9 +42,11 @@
             this.x48ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x36ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x24ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.functionListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +59,7 @@
             this.viewToolStripMenuItem,
             this.windowsToolStripMenuItem,
             this.tileSizeToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.MdiWindowListItem = this.windowsToolStripMenuItem;
             this.menuStrip1.Name = "menuStrip1";
@@ -150,10 +152,19 @@
             this.x24ToolStripMenuItem.Text = "24 (Low Quality/Fastest Speed)";
             this.x24ToolStripMenuItem.Click += new System.EventHandler(this.x24ToolStripMenuItem_Click);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.functionListToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -172,6 +183,13 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(36, 17);
             this.lblStatus.Text = "None";
+            // 
+            // functionListToolStripMenuItem
+            // 
+            this.functionListToolStripMenuItem.Name = "functionListToolStripMenuItem";
+            this.functionListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.functionListToolStripMenuItem.Text = "Function List";
+            this.functionListToolStripMenuItem.Click += new System.EventHandler(this.functionListToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -204,7 +222,7 @@
         private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         public FormTile fTile; //= new frmTile();
@@ -222,6 +240,8 @@
         private System.Windows.Forms.ToolStripMenuItem x48ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x36ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x24ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem functionListToolStripMenuItem;
 
 
         //public ArchiveInfo dat;

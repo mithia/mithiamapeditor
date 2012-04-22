@@ -161,16 +161,16 @@ namespace Aesir5
 
             if (!isMouseDown)
             {
-                //if (ModifierKeys == Keys.Control)
-                //{
-                //    if (selectedColumns.Contains(selectedColumn)) selectedColumns.Remove(selectedColumn);
-                //    else selectedColumns.Add(selectedColumn);
-                //}
-                //else
-                //{
+                if (ModifierKeys == Keys.Control)
+                {
+                    if (selectedColumns.Contains(selectedColumn)) selectedColumns.Remove(selectedColumn);
+                    else selectedColumns.Add(selectedColumn);
+                }
+                else
+                {
                     selectedColumns.Clear();
                     selectedColumns.Add(selectedColumn);
-                //}
+                }
                 TileManager.ObjectSelection = GetSelection();
                 TileManager.LastSelection = TileManager.SelectionType.Object;
             }

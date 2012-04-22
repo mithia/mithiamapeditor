@@ -25,13 +25,17 @@ namespace Aesir5
         private bool mapBitmapIsReady;
         private bool showTiles, showObjects;
         private bool isMouseDown;
-        private bool isRightMouseDown;
+        private bool copy;
         private int sizeModifier;
         private const int initialWidth = 17, initialHeight = 15;
         private Point focusedTile = new Point(-1, -1);
         private Point copyStartTile = new Point(-1, -1);
         private Map activeMap;
         private string activeMapPath;
+        private int xMinFill;
+        private int xMaxFill;
+        private int yMinFill;
+        private int yMaxFill;
 
         private readonly LinkedList<IMapAction> mapUndoActions = new LinkedList<IMapAction>();
         private readonly LinkedList<IMapAction> mapRedoActions = new LinkedList<IMapAction>();
@@ -133,10 +137,10 @@ namespace Aesir5
             }
 
             if (focusedTile.X >= 0 && focusedTile.Y >= 0 &&
-                focusedTile.X < activeMap.Size.Width && focusedTile.Y < activeMap.Size.Height && isRightMouseDown)
+                focusedTile.X < activeMap.Size.Width && focusedTile.Y < activeMap.Size.Height && copy)
             {
                 Pen pen = new Pen(Color.Yellow, 2);
-                if (isRightMouseDown) pen = new Pen(Color.Yellow, 2);
+                if (copy) pen = new Pen(Color.Yellow, 2);
                 e.Graphics.DrawRectangle(pen, copyStartTile.X * sizeModifier, copyStartTile.Y * sizeModifier, sizeModifier + sizeModifier * (focusedTile.X - copyStartTile.X), sizeModifier + sizeModifier * (focusedTile.Y - copyStartTile.Y));
                 pen.Dispose();
             }
@@ -145,7 +149,7 @@ namespace Aesir5
                 focusedTile.X < activeMap.Size.Width && focusedTile.Y < activeMap.Size.Height)
             {
                 Pen pen = new Pen(Color.Green, 2);
-                if (isRightMouseDown) pen = new Pen(Color.Yellow, 2);
+                if (copy) pen = new Pen(Color.Yellow, 2);
                 e.Graphics.DrawRectangle(pen, focusedTile.X * sizeModifier, focusedTile.Y * sizeModifier, sizeModifier, sizeModifier);
                 pen.Dispose();
             }
@@ -250,7 +254,7 @@ namespace Aesir5
         private void pnlImage_MouseClick(object sender, MouseEventArgs e)
         {
 
-            if (e.Button == MouseButtons.Middle && TileManager.TileSelection.Count == 1 && activeMap.IsEditable && ModifierKeys == Keys.Control)
+            if (e.Button == MouseButtons.Right && TileManager.TileSelection.Count == 1 && activeMap.IsEditable && ModifierKeys == Keys.Control)
             {
                 DialogResult result = MessageBox.Show("Would you like to fill the entire map with tile " + TileManager.TileSelection[new Point(0, 0)] + "?", "Tile Fill", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes)
@@ -272,7 +276,7 @@ namespace Aesir5
                 }
             }
 
-            else if (e.Button == MouseButtons.Middle && TileManager.TileSelection.Count == 1 && activeMap.IsEditable)
+            else if (e.Button == MouseButtons.Right && TileManager.TileSelection.Count == 1 && activeMap.IsEditable)
             {
                 DialogResult result = MessageBox.Show("Would you like to fill this area with tile " + TileManager.TileSelection[new Point(0, 0)] + "?", "Tile Fill", MessageBoxButtons.YesNoCancel);
 
@@ -282,6 +286,16 @@ namespace Aesir5
                     int tileX = e.X / sizeModifier;
                     int tileY = e.Y / sizeModifier;
 
+                    xMinFill = tileX - 25;
+                    xMaxFill = tileX + 25;
+                    yMinFill = tileY - 25;
+                    yMaxFill = tileY + 25;
+                    
+                    if (xMinFill < 0) xMinFill = 0;
+                    if (xMaxFill >= activeMap.Size.Width) xMaxFill = activeMap.Size.Width;
+                    if (yMinFill < 0) yMinFill = 0;
+                    if (yMaxFill >= activeMap.Size.Height) yMaxFill = activeMap.Size.Height;
+                    
                     activeMap[tileX, tileY] = activeMap[tileX, tileY] ?? Map.Tile.GetDefault();
                     floodFill(tileX, tileY, activeMap[tileX, tileY].TileNumber, TileManager.TileSelection[new Point(0, 0)]);
                     //SetImage(null);
@@ -295,14 +309,16 @@ namespace Aesir5
 
         private void pnlImage_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button != MouseButtons.Left) return;
+
+            if (ModifierKeys == (Keys.Control | Keys.Alt | Keys.Shift))
             {
                 copyStartTile.X = e.X / sizeModifier;
                 copyStartTile.Y = e.Y / sizeModifier;
-                isRightMouseDown = true;
+                copy = true;
                 return;
             }
-            if (e.Button == MouseButtons.Middle) return;
+
             if (!activeMap.IsEditable)
             {
                 MessageBox.Show(@"You can enable editability in the Edit menu or by pressing Ctrl+E.",
@@ -315,74 +331,47 @@ namespace Aesir5
             int tileX = e.X / sizeModifier;
             int tileY = e.Y / sizeModifier;
 
-            if (ModifierKeys == Keys.Control)
-            {
-                Dictionary<Point, Map.Tile> dictionary = new Dictionary<Point, Map.Tile>();
-
-                dictionary.Add(new Point(0, 0), activeMap[tileX, tileY] ?? Map.Tile.GetDefault());
-                TileManager.TileSelection.Clear();
-                TileManager.LastSelection = TileManager.SelectionType.None;
-                TileManager.LastSelection |= TileManager.SelectionType.Tile;
-
-                foreach (KeyValuePair<Point, Map.Tile> keyValuePair in dictionary)
-                    if (!TileManager.TileSelection.ContainsKey(keyValuePair.Key))
-                        TileManager.TileSelection.Add(keyValuePair.Key, keyValuePair.Value.TileNumber);
-            }
-            else if (ModifierKeys == Keys.Alt)
-            {
-                Dictionary<Point, Map.Tile> dictionary = new Dictionary<Point, Map.Tile>();
-
-                dictionary.Add(new Point(0, 0), activeMap[tileX, tileY] ?? Map.Tile.GetDefault());
-                TileManager.ObjectSelection.Clear();
-                TileManager.LastSelection = TileManager.SelectionType.None;
-                TileManager.LastSelection |= TileManager.SelectionType.Object;
-
-                foreach (KeyValuePair<Point, Map.Tile> keyValuePair in dictionary)
-                    if (!TileManager.ObjectSelection.ContainsKey(keyValuePair.Key))
-                        TileManager.ObjectSelection.Add(keyValuePair.Key, keyValuePair.Value.ObjectNumber);
-            }
+            if (ShowPass)
+                TogglePass(tileX, tileY);
             else
             {
-                if (ShowPass)
-                    TogglePass(tileX, tileY);
-                else
-                {
-                    if ((TileManager.LastSelection & TileManager.SelectionType.Tile) == TileManager.SelectionType.Tile)
-                        Paste(tileX, tileY, TileManager.SelectionType.Tile);
-                    if ((TileManager.LastSelection & TileManager.SelectionType.Pass) == TileManager.SelectionType.Pass)
-                        Paste(tileX, tileY, TileManager.SelectionType.Pass);
-                    if ((TileManager.LastSelection & TileManager.SelectionType.Object) == TileManager.SelectionType.Object)
-                        Paste(tileX, tileY, TileManager.SelectionType.Object);
-                    MinimapWindow.SetImage(pnlImage.Image);
-                }
+                if ((TileManager.LastSelection & TileManager.SelectionType.Tile) == TileManager.SelectionType.Tile)
+                    Paste(tileX, tileY, TileManager.SelectionType.Tile);
+                if ((TileManager.LastSelection & TileManager.SelectionType.Pass) == TileManager.SelectionType.Pass)
+                    Paste(tileX, tileY, TileManager.SelectionType.Pass);
+                if ((TileManager.LastSelection & TileManager.SelectionType.Object) == TileManager.SelectionType.Object)
+                    Paste(tileX, tileY, TileManager.SelectionType.Object);
             }
+
         }
 
         private void pnlImage_MouseUp(object sender, MouseEventArgs e)
         {
-
-            if (e.Button != MouseButtons.Left && e.Button != MouseButtons.Right) return;
+            if (e.Button != MouseButtons.Left) return;
+            
             isMouseDown = false;
-            isRightMouseDown = false;
+            copy = false;
 
             if (copyStartTile != new Point(-1, -1))
             {
-
                 toolStripStatusLabel.Text = string.Format("Upper Left: ({0}, {1}) Lower Right: ({2}, {3})", copyStartTile.X, copyStartTile.Y, focusedTile.X, focusedTile.Y);
-                if (ModifierKeys == Keys.Alt)
+                
+                if (ModifierKeys == Keys.Control)
                 {
                     CopySelection(copyStartTile, focusedTile, true, false);
                 }
-                else if (ModifierKeys == Keys.Control)
+                else if (ModifierKeys == Keys.Alt)
                 {
                     CopySelection(copyStartTile, focusedTile, false, true);
                 }
-                else
+                else if (ModifierKeys == Keys.Shift)
                 {
                     CopySelection(copyStartTile, focusedTile, true, true);
                 }
             }
+
             copyStartTile = new Point(-1, -1);
+            UpdateMinimap(true, false);
         }
 
         private void FormMap_LostFocus(object sender, EventArgs e)
@@ -831,10 +820,10 @@ namespace Aesir5
             Paste(fillX, fillY, TileManager.SelectionType.Tile);
 
 
-            if (fillX + 1 < activeMap.Size.Width) { floodFill(fillX + 1, fillY, findTile, replaceTile); }
-            if (fillX - 1 >= 0) { floodFill(fillX - 1, fillY, findTile, replaceTile); }
-            if (fillY + 1 < activeMap.Size.Height) { floodFill(fillX, fillY + 1, findTile, replaceTile); }
-            if (fillY - 1 >= 0) { floodFill(fillX, fillY - 1, findTile, replaceTile); }
+            if (fillX + 1 < xMaxFill) { floodFill(fillX + 1, fillY, findTile, replaceTile); }
+            if (fillX - 1 >= xMinFill) { floodFill(fillX - 1, fillY, findTile, replaceTile); }
+            if (fillY + 1 < yMaxFill) { floodFill(fillX, fillY + 1, findTile, replaceTile); }
+            if (fillY - 1 >= yMinFill) { floodFill(fillX, fillY - 1, findTile, replaceTile); }
             return;
 
         }

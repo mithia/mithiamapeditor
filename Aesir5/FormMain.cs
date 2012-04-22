@@ -170,5 +170,21 @@ namespace Aesir5
                 }
             }
         }
+
+        private void functionListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild is FormTile)
+                MessageBox.Show("Left-Click: Select Tile\nCtrl + Left-Click: Select Multiple Tiles\nMouse-Wheel Up: Scroll Left\nMouse-Wheel Down: Scroll Right",
+                    "Tile Window Help");
+            else if (ActiveMdiChild is FormObject)
+                MessageBox.Show("Left-Click: Select Object\nCtrl + Left-Click: Select Multiple Objects\nLeft-Click + Drag: Select Contiguous Objects\n" +
+                    "Mouse-Wheel Up: Scroll Left\nMouse-Wheel Down: Scroll Right", "Object Window Help");
+            else if (ActiveMdiChild is FormMap)
+                MessageBox.Show("Left-Click: Paint Tile/Object Selection/Change Pass\nLeft-Click + Drag: Paint Contiguously\nCtrl + Left-Click: Copy Single Tile\n" +
+                    "Ctrl + Left-Click + Drag: Copy Contiguous Tiles\nAlt + Left-Click: Copy Single Object\nAlt + Left-Click + Drag: Copy Contiguous Objects\n" +
+                    "Shift + Left-Click: Copy Single Tile/Object\nShift + Left-Click + Drag: Copy Contiguous Tiles/Objects\nRight-Click: Fill Area\n" +
+                    "Ctrl + Right-Click: Fill Map\nMouse-Wheel Up: Scroll Left\nMouse-Wheel Down: Scroll Right\nCtrl + Mouse-Wheel Up: Scroll Up\n" +
+                    "Ctrl + Mouse-Wheel Down: Scroll Down", "Map Window Help");
+        }
     }
 }
