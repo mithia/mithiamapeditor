@@ -298,7 +298,11 @@ namespace Aesir5
                     if (yMaxFill >= activeMap.Size.Height) yMaxFill = activeMap.Size.Height;
                     
                     activeMap[tileX, tileY] = activeMap[tileX, tileY] ?? Map.Tile.GetDefault();
-                    floodFill(tileX, tileY, activeMap[tileX, tileY].TileNumber, TileManager.TileSelection[new Point(0, 0)]);
+
+                    if (activeMap[tileX, tileY].TileNumber != TileManager.TileSelection[new Point(0, 0)])
+                    {
+                        floodFill(tileX, tileY, activeMap[tileX, tileY].TileNumber, TileManager.TileSelection[new Point(0, 0)]);
+                    }
                     //SetImage(null);
                     //RenderMap();
                 }
