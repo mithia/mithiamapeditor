@@ -130,7 +130,7 @@ namespace Aesir5
                     for (int j = 0; j < activeMap.Size.Height; j++)
                     {
                         Map.Tile mapTile = activeMap[i, j];
-                        e.Graphics.DrawRectangle((mapTile == null || mapTile.Passability) ? penRed : penGreen, i * sizeModifier + 20, j * sizeModifier + 20, 8, 8);
+                        e.Graphics.DrawRectangle((mapTile == null || mapTile.Passability) ? penRed : penGreen, i * sizeModifier + (sizeModifier * 5 / 12), j * sizeModifier + (sizeModifier * 5 / 12), (sizeModifier * 1 / 6), (sizeModifier * 1 / 6));
                     }
                 }
                 penGreen.Dispose();

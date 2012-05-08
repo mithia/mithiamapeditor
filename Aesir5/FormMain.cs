@@ -65,8 +65,13 @@ namespace Aesir5
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (Form mdiChild in MdiChildren) mdiChild.Close();
-            if (MdiChildren.Length == 0) Close();
+            DialogResult result = MessageBox.Show("Are you sure you wish to exit?", "Exit Confirmation", MessageBoxButtons.OKCancel);
+
+            if (result == DialogResult.OK)
+            {
+                foreach (Form mdiChild in MdiChildren) mdiChild.Close();
+                if (MdiChildren.Length == 0) Close();
+            }
         }
 
         private void x48ToolStripMenuItem_Click(object sender, EventArgs e)
