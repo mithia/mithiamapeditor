@@ -43,10 +43,10 @@
             this.x36ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x24ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.functionListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.functionListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -161,10 +161,17 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
+            // functionListToolStripMenuItem
+            // 
+            this.functionListToolStripMenuItem.Name = "functionListToolStripMenuItem";
+            this.functionListToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.functionListToolStripMenuItem.Text = "Function List";
+            this.functionListToolStripMenuItem.Click += new System.EventHandler(this.functionListToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -183,13 +190,6 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(36, 17);
             this.lblStatus.Text = "None";
-            // 
-            // functionListToolStripMenuItem
-            // 
-            this.functionListToolStripMenuItem.Name = "functionListToolStripMenuItem";
-            this.functionListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.functionListToolStripMenuItem.Text = "Function List";
-            this.functionListToolStripMenuItem.Click += new System.EventHandler(this.functionListToolStripMenuItem_Click);
             // 
             // FormMain
             // 

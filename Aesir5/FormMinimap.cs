@@ -47,8 +47,8 @@ namespace Aesir5
         {
             //OnPaint(e);
 
-            int mapWidthInPixels = mapSize.Width * 36;
-            int mapHeightInPixels = mapSize.Height * 36;
+            int mapWidthInPixels = mapSize.Width * ImageRenderer.Singleton.sizeModifier;
+            int mapHeightInPixels = mapSize.Height * ImageRenderer.Singleton.sizeModifier;
 
             int rectWidth = (int)(pnlImage.Width * (mapWindowSize.Width / (float)mapWidthInPixels));
             if (rectWidth > pnlImage.Width) rectWidth = pnlImage.Width;
@@ -73,8 +73,8 @@ namespace Aesir5
             oldLocation = e.Location;
             isMouseDown = true;
 
-            int mapWidthInPixels = mapSize.Width * 36;
-            int mapHeightInPixels = mapSize.Height * 36;
+            int mapWidthInPixels = mapSize.Width * ImageRenderer.Singleton.sizeModifier;
+            int mapHeightInPixels = mapSize.Height * ImageRenderer.Singleton.sizeModifier;
 
             int mapX = (int)(mapWidthInPixels * ((float)e.X / pnlImage.Width));
             int mapY = (int)(mapHeightInPixels * ((float)e.Y / pnlImage.Height));

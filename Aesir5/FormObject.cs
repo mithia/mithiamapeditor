@@ -33,7 +33,7 @@ namespace Aesir5
             MaximumSize = new Size(MaximumSize.Width + 10, MaximumSize.Height + 10);
             if (this.BackgroundImage == null) this.BackgroundImage = new Bitmap(12 * sizeModifier, 12 * sizeModifier);
             menuStrip.Visible = false;
-            sb1.Maximum = TileManager.ObjectInfos.Length / 12 + 7;
+            sb1.Maximum = TileManager.ObjectInfos.Length / 12 + 8;
             RenderObjectset();
         }
 
