@@ -14,10 +14,10 @@ namespace Aesir5
         /// </summary>
         public static void CreateMapEditorRegistryKey()
         {
-            const string mapEditorKeyString = "Software\\Aesir";
+            const string mapEditorKeyString = "Software\\MithiaMapEditor";
 
             RegistryKey mapEditorKey = Registry.CurrentUser.OpenSubKey(mapEditorKeyString);
-            if (mapEditorKey != null)
+            if (mapEditorKey != null && mapEditorKey.GetValue("NexusTKPath") != null && Directory.Exists(mapEditorKey.GetValue("NexusTKPath").ToString()))
             {
                 mapEditorKey.Close();
                 return;
@@ -27,6 +27,7 @@ namespace Aesir5
             if (mapEditorKey != null)
             {
                 mapEditorKey.SetValue("Checksum", 0);
+                mapEditorKey.SetValue("NexusTKPath", GetGameInstallFolder());
                 mapEditorKey.Close();
             }
         }
@@ -37,13 +38,23 @@ namespace Aesir5
         /// <returns></returns>
         public static string GetGameInstallFolder()
         {
-            // 
-            RegistryKey gameKey = Registry.CurrentUser;
-            gameKey = gameKey.OpenSubKey("Software\\Nexon\\Kingdom of the Winds", false);
-            if (gameKey == null) return null;
+            OpenFileDialog fileDialog = new OpenFileDialog { Filter = "NexusTK|NexusTK.exe" };
+            DialogResult result = fileDialog.ShowDialog();
 
-            object gameLocation = gameKey.GetValue("Location");
-            return gameLocation == null ? null : gameLocation.ToString();
+            if (result != DialogResult.OK)
+            {
+                CloseMapEditor();
+                return null;
+            }
+
+            if (Directory.Exists(Path.GetDirectoryName(fileDialog.FileName)))
+            {
+                return Path.GetDirectoryName(fileDialog.FileName);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -54,20 +65,18 @@ namespace Aesir5
         /// <returns>True if files were already extracted or if extraction executed succesfully. False otherwise.</returns>
         public static bool ExtractFiles(string mapEditorFolder)
         {
-            string gameInstallFolder = GetGameInstallFolder();
-
-            if (string.IsNullOrEmpty(gameInstallFolder) || !Directory.Exists(gameInstallFolder))
+            RegistryKey tKey = Registry.CurrentUser;
+            
+            tKey = tKey.OpenSubKey("Software\\MithiaMapEditor", true);
+            System.Diagnostics.Debug.Assert(tKey != null);
+            
+            if (string.IsNullOrEmpty(tKey.GetValue("NexusTKPath").ToString()) || !Directory.Exists(tKey.GetValue("NexusTKPath").ToString()))
             {
                 CloseMapEditor();
                 return false;
             }
 
-            string exePath = gameInstallFolder + "\\NexusTK.exe";
-            if (!File.Exists(exePath))
-            {
-                CloseMapEditor();
-                return false;
-            }
+            string exePath = tKey.GetValue("NexusTKPath").ToString() + "\\NexusTK.exe";
 
             // If Exe is modified, re-extract files
             if (!IsExeModified(exePath)) ExtractFilesCore(mapEditorFolder);
@@ -80,7 +89,12 @@ namespace Aesir5
 
         private static void ExtractFilesCore(string mapEditorFolder)
         {
-            string gameInstallDataFolder = GetGameInstallFolder() + "\\Data";
+            RegistryKey tKey = Registry.CurrentUser;
+
+            tKey = tKey.OpenSubKey("Software\\MithiaMapEditor", true);
+            System.Diagnostics.Debug.Assert(tKey != null);
+
+            string gameInstallDataFolder = tKey.GetValue("NexusTKPath").ToString() + "\\Data";
             string mapEditorDataFolder = mapEditorFolder + "\\Data";
 
             if (!Directory.Exists(mapEditorDataFolder))
@@ -125,7 +139,7 @@ namespace Aesir5
             byte[] bytes = File.ReadAllBytes(exePath);
             uint checksum = t.ComputeChecksum(bytes);
 
-            tKey = tKey.OpenSubKey("Software\\Aesir", true);
+            tKey = tKey.OpenSubKey("Software\\MithiaMapEditor", true);
             System.Diagnostics.Debug.Assert(tKey != null);
             uint c_crc = Convert.ToUInt32(tKey.GetValue("Checksum"));
             if (c_crc != checksum)
