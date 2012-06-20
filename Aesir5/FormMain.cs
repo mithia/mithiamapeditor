@@ -30,6 +30,7 @@ namespace Aesir5
             fObject = new FormObject { MdiParent = this };
             fTile.Show();
             fObject.Show();
+            new FormMap(this).Show();
         }
 
         private void FormMain_MdiChildActivate(object sender, EventArgs e)
